@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { categoryController } from '../controllers/categoryController.js';
+import { authenticate, authorize } from '../middleware/auth.js';
+import { validate } from '../middleware/validate.js';
+import { categorySchema, idParamSchema } from '../validators/schemas.js';
+const router = Router();
+router.get('/', categoryController.list);
+router.post('/', authenticate, authorize('admin'), validate(categorySchema), categoryController.create);
+router.patch('/:id', authenticate, authorize('admin'), validate(idParamSchema, 'params'), validate(categorySchema), categoryController.update);
+router.delete('/:id', authenticate, authorize('admin'), validate(idParamSchema, 'params'), categoryController.delete);
+export default router;

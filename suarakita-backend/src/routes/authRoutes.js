@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { authController } from '../controllers/authController.js';
+import { authenticate } from '../middleware/auth.js';
+import { validate } from '../middleware/validate.js';
+import { loginSchema, registerSchema } from '../validators/schemas.js';
+const router = Router();
+router.post('/register', validate(registerSchema), (req, res, next) => { try { authController.register(req, res); } catch (e) { next(e); } });
+router.post('/login', validate(loginSchema), (req, res, next) => { try { authController.login(req, res); } catch (e) { next(e); } });
+router.post('/logout', authenticate, authController.logout);
+router.get('/me', authenticate, authController.me);
+export default router;

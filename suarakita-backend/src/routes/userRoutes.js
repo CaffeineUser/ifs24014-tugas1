@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { userController } from '../controllers/userController.js';
+import { authenticate, authorize } from '../middleware/auth.js';
+import { validate } from '../middleware/validate.js';
+import { paginationSchema, updateProfileSchema } from '../validators/schemas.js';
+const router = Router();
+router.get('/me', authenticate, userController.me);
+router.patch('/me', authenticate, validate(updateProfileSchema), userController.updateProfile);
+router.get('/', authenticate, authorize('admin'), validate(paginationSchema, 'query'), userController.list);
+export default router;

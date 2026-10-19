@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import db from '../src/config/db.js';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const schema = fs.readFileSync(path.join(root, 'database/schema.sql'), 'utf8');
+const seed = fs.readFileSync(path.join(root, 'database/seed.sql'), 'utf8');
+db.exec(schema);
+db.exec(seed);
+console.log('Skema SQLite dan kategori awal berhasil dibuat.');
+db.close();

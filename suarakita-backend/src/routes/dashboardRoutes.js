@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { dashboardController } from '../controllers/dashboardController.js';
+import { authenticate, authorize } from '../middleware/auth.js';
+import { z } from 'zod';
+import { validate } from '../middleware/validate.js';
+const router = Router();
+const priorityQuerySchema = z.object({ limit: z.coerce.number().int().min(1).max(100).default(10) }).strict();
+router.use(authenticate, authorize('admin'));
+router.get('/summary', dashboardController.summary);
+router.get('/by-category', dashboardController.byCategory);
+router.get('/by-status', dashboardController.byStatus);
+router.get('/priority', validate(priorityQuerySchema, 'query'), dashboardController.priority);
+export default router;
